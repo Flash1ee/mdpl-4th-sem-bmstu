@@ -1,3 +1,11 @@
+EXTRN newline: near
+EXTRN print_space: near
+EXTRN print_matrix: near
+
+PUBLIC m
+PUBLIC n
+PUBLIC matrix
+
 STK SEGMENT PARA STACK 'STACK'
     DB 200 dup (0)
 STK ENDS
@@ -21,9 +29,7 @@ main:
     sub m, '0'
 
     ; вывод пробела
-    mov dl, 32
-    mov ah, 2
-    int 21H
+    call print_space
 
     mov ah, 1
     int 21H
@@ -31,11 +37,7 @@ main:
     sub n, '0'
 
     ; вывод новой строки
-    mov ah, 2
-    mov dl, 10 ; LF
-    int 21H
-    mov dl, 13 ; CR
-    int 21H
+    call newline
 
     mov al, m
     mul n
@@ -49,9 +51,7 @@ main:
         mov matrix[si], al
         inc si
 
-        mov dl, " "
-        mov ah, 2
-        int 21H
+        call print_space
 
         ; проверка на перевод на новую строку
         mov AX, si
@@ -64,58 +64,17 @@ main:
         loop read_matrix
 
     ; newline
+    call newline
 
-    mov ah, 2
-    mov dl, 10 ; LF
-    int 21H
-    mov dl, 13 ; CR
-    int 21H
-
-    ; в si пишу количество символов
-    mov al, m
-    mul n
-    mov CX, AX
-    mov si, 0
-
-    print_matrix:
-        mov ah, 2
-        mov dl, matrix[si]
-        add dl, '0'
-        int 21H
-
-        mov dl, " "
-        int 21H
-
-        inc si
-
-        ; проверка на перевод на новую строку
-        mov AX, si
-        mov bl, m
-        div bl
-        cmp ah, 0
-        je call_newline_print
-        go_back_out:
-
-        loop print_matrix
+    call print_matrix
     
     mov ax, 4c00H
     int 21H
     
 call_newline:
-    mov ah, 2
-    mov dl, 10 ; LF
-    int 21H
-    mov dl, 13 ; CR
-    int 21H
+    call newline
     jmp go_back
 
-call_newline_print:
-    mov ah, 2
-    mov dl, 10 ; LF
-    int 21H
-    mov dl, 13 ; CR
-    int 21H
-    jmp go_back_out
 
 SEGCODE ENDS
 END main
