@@ -13,11 +13,21 @@ PUBLIC matrix
 STK SEGMENT PARA STACK 'STACK'
     DB 200 dup (0)
 STK ENDS
-
+; MSG SEGMENT PARA COMMON "MESSAGE"
+;     in_rows_msg db "Input count of rows([1:9]) $"
+;     in_cols_msg db "Input count of cols([1:9]) $"
+;     result_msg db "Result matrix $"
+;     err db "Error$"
+; MSG ENDS
 SEGDATA SEGMENT PARA COMMON 'DATA'
     m   db 1;
     n   db 1;
     matrix  db 81 dup('0')
+
+    in_rows_msg db "Input count of rows([1:9]) $"
+    in_cols_msg db "Input count of cols([1:9]) $"
+    result_msg db "Result matrix $"
+    err db "Error$"
 SEGDATA ENDS
 
 SEGCODE SEGMENT PARA PUBLIC 'CODE'
@@ -25,32 +35,44 @@ SEGCODE SEGMENT PARA PUBLIC 'CODE'
 
 main:
     mov AX, SEGDATA
+
+    ; кол-во строк
     mov DS, AX
+
+    mov dx, offset in_rows_msg
+    mov ah, 9
+    int 21h
+    ; считывание n
+    mov ah, 1
+    int 21H
+    mov n, al
+    ; проверка валидности n
+    cmp al, '0'
+    jbe exit_err
+    cmp al, '9'
+    ja exit_err
+
+    sub n, '0'
+
+    ; новая строка
+    call newline
+
+    ; сообщение считывания m 
+    mov dx, offset in_cols_msg
+    mov ah, 9
+    int 21h
 
     mov ah, 1
     int 21H
     mov m, al
 
     cmp al, '0'
-    jb exit
+    ; проверки валидности
+    jbe exit_err
     cmp al, '9'
-    ja exit
+    ja exit_err
 
     sub m, '0'
-
-    ; вывод пробела
-    call print_space
-
-    mov ah, 1
-    int 21H
-    mov n, al
-    
-    cmp al, '0'
-    jb exit
-    cmp al, '9'
-    ja exit
-
-    sub n, '0'
 
     ; вывод новой строки
     call newline
@@ -64,9 +86,9 @@ main:
         mov ah, 1
         int 21H
         cmp al, '0'
-        jb exit
+        jb exit_err
         cmp al, '9'
-        ja exit
+        ja exit_err
         sub al, '0'
         mov matrix[si], al
         inc si
@@ -107,13 +129,28 @@ main:
         loop new_matrix
 
 
+    mov dx, offset result_msg
+    mov ah, 9
+    int 21h
+    call newline
 
     call print_matrix
     
     exit:
     mov ax, 4c00H
     int 21H
-    
+
+exit_err:
+    mov dl, 10
+    mov ah, 2
+    int 21H
+    mov dl, 13 
+    int 21h
+    mov dx, offset err
+    mov ah, 9
+    int 21h
+    jmp exit
+
 call_newline:
     call newline
     jmp go_back
