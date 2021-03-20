@@ -1,3 +1,7 @@
+; чётные элементы увеличить на 1, нечётные -
+; уменьшить на 1. Вывести только последние цифры
+; новых значений
+
 EXTRN newline: near
 EXTRN print_space: near
 EXTRN print_matrix: near
@@ -26,6 +30,12 @@ main:
     mov ah, 1
     int 21H
     mov m, al
+
+    cmp al, '0'
+    jb exit
+    cmp al, '9'
+    ja exit
+
     sub m, '0'
 
     ; вывод пробела
@@ -34,6 +44,12 @@ main:
     mov ah, 1
     int 21H
     mov n, al
+    
+    cmp al, '0'
+    jb exit
+    cmp al, '9'
+    ja exit
+
     sub n, '0'
 
     ; вывод новой строки
@@ -47,6 +63,10 @@ main:
     read_matrix:
         mov ah, 1
         int 21H
+        cmp al, '0'
+        jb exit
+        cmp al, '9'
+        ja exit
         sub al, '0'
         mov matrix[si], al
         inc si
@@ -56,7 +76,7 @@ main:
         ; проверка на перевод на новую строку
         mov AX, si
         mov bl, m
-        div bl
+        div bl  
         cmp ah, 0
         je call_newline
         go_back:
@@ -66,8 +86,31 @@ main:
     ; newline
     call newline
 
+    mov al, m
+    mul n
+    mov cx, AX
+    mov si, 0
+    mov BP, 0
+    new_matrix:
+        xor AX, AX
+        xor bx, bx
+        mov bl, matrix[BP]
+        mov ax, bx
+        mov bl, 2
+        div bl
+        cmp ah, 0
+        je incr
+        jne decr
+        go_next:
+
+        inc BP
+        loop new_matrix
+
+
+
     call print_matrix
     
+    exit:
     mov ax, 4c00H
     int 21H
     
@@ -75,6 +118,12 @@ call_newline:
     call newline
     jmp go_back
 
+decr:
+    dec matrix[BP]
+    jmp go_next
+incr:
+    inc matrix[BP]
+    jmp go_next
 
 SEGCODE ENDS
 END main
