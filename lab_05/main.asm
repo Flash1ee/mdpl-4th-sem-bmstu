@@ -13,12 +13,6 @@ PUBLIC matrix
 STK SEGMENT PARA STACK 'STACK'
     DB 200 dup (0)
 STK ENDS
-; MSG SEGMENT PARA COMMON "MESSAGE"
-;     in_rows_msg db "Input count of rows([1:9]) $"
-;     in_cols_msg db "Input count of cols([1:9]) $"
-;     result_msg db "Result matrix $"
-;     err db "Error$"
-; MSG ENDS
 SEGDATA SEGMENT PARA COMMON 'DATA'
     m   db 1;
     n   db 1;
