@@ -12,6 +12,8 @@ MAIN proc near
     speed DB 01fh
     SAVEPROC DD ?
     JMP INIT
+    is_installed Dw 0h
+
 
 MY_FUNC:
     pusha
@@ -49,14 +51,10 @@ MY_FUNC:
 EXIT:
     push es
     push DS
-    mov ah, 2
-    mov dl, 30
-    int 21h
 
-    mov ax,2509H
-    mov dx, word ptr SAVEPROC+2
-    mov ds, dx
     mov dx, word ptr SAVEPROC
+    mov ds, word ptr SAVEPROC+2
+    mov ax, 251ch
     int 21H
 
     pop DS
@@ -71,6 +69,12 @@ EXIT:
 INIT:
     MOV AX, 351ch
     INT 21H
+
+    cmp is_installed, 0h
+    jne EXIT
+
+    inc is_installed
+
     MOV WORD PTR SAVEPROC, BX
     MOV WORD PTR SAVEPROC+2, ES
 
