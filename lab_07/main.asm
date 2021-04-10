@@ -10,7 +10,7 @@ org 100h
 MAIN proc near 
     cur DB 0
     speed DB 01fh
-    SAVEPROCINT9 DD ?
+    SAVEPROC DD ?
     JMP INIT
 
 MY_FUNC:
@@ -32,7 +32,7 @@ MY_FUNC:
     out 60h, al
 
     dec speed
-    test speed, 0h
+    test speed, 01fh
     jz reset
     jmp end_loop
     reset:
@@ -45,7 +45,7 @@ MY_FUNC:
         popf
         popa
 
-        jmp CS:SAVEPROCINT9
+        jmp CS:SAVEPROC
 EXIT:
     push es
     push DS
@@ -54,9 +54,9 @@ EXIT:
     int 21h
 
     mov ax,2509H
-    mov dx, word ptr SAVEPROCINT9+2
+    mov dx, word ptr SAVEPROC+2
     mov ds, dx
-    mov dx, word ptr SAVEPROCINT9
+    mov dx, word ptr SAVEPROC
     int 21H
 
     pop DS
@@ -71,8 +71,8 @@ EXIT:
 INIT:
     MOV AX, 351ch
     INT 21H
-    MOV WORD PTR SAVEPROCINT9, BX
-    MOV WORD PTR SAVEPROCINT9+2, ES
+    MOV WORD PTR SAVEPROC, BX
+    MOV WORD PTR SAVEPROC+2, ES
 
     MOV AX, 251ch
     MOV DX, OFFSET MY_FUNC
