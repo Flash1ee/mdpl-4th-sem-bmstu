@@ -7,12 +7,13 @@
 
 org 100h   
 
-MAIN proc near 
+MAIN:
     cur DB 0
     speed DB 01fh
     SAVEPROC DD ?
+    is_installed DB 'X'
+
     JMP INIT
-    is_installed Dw 0h
 
 
 MY_FUNC:
@@ -48,32 +49,13 @@ MY_FUNC:
         popa
 
         jmp CS:SAVEPROC
-EXIT:
-    push es
-    push DS
-
-    mov dx, word ptr SAVEPROC
-    mov ds, word ptr SAVEPROC+2
-    mov ax, 251ch
-    int 21H
-
-    pop DS
-    pop ES  
-
-    mov ah, 49H
-    int 21h
-
-    mov ax, 4C00h
-    int 21h
 
 INIT:
     MOV AX, 351ch
     INT 21H
 
-    cmp is_installed, 0h
-    jne EXIT
-
-    inc is_installed
+    cmp es:is_installed, 'X'
+    JE EXIT
 
     MOV WORD PTR SAVEPROC, BX
     MOV WORD PTR SAVEPROC+2, ES
@@ -85,5 +67,30 @@ INIT:
     MOV DX, OFFSET INIT
     INT 27H
 
-MAIN ENDP
+EXIT:
+    pusha
+
+    push es
+    push DS
+
+    pushf
+
+    mov dx, word ptr es:SAVEPROC
+    mov ds, word ptr es:SAVEPROC+2
+
+    mov ax, 251ch
+    int 21H
+  
+    popf
+
+    pop ds
+    pop ES
+    popa
+    
+    mov ah, 49H
+    int 21h
+
+    mov ax, 4C00h
+    int 21h
+
 END MAIN
