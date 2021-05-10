@@ -15,6 +15,10 @@ int main() {
     print_80_bit_result();
     asm_print_80_bit_result();
 #endif
+    sin_compare();
     printf("Hello world!\n");
+
+
+
     return 0;
 }
