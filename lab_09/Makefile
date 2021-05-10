@@ -5,7 +5,7 @@ OUT=./out
 SOURCES=$(wildcard $(SRC)/*.c)
 OBJS=$(SOURCES:$(SRC)/%.c=$(OUT)/%.o)
 INCS=$(wildcard $(INC)/*.h)
-CFLAGS=-std=c99 -I$(INC)/
+CFLAGS=-std=c99 -I$(INC)/ -masm=intel -m80387
 
 FPU_INST_FRST=-M80387
 FPU_INST_SEC=-MNO-80387
