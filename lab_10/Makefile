@@ -5,7 +5,7 @@ OUT=./out
 SOURCES=$(wildcard $(SRC)/*.c)
 OBJS=$(SOURCES:$(SRC)/%.c=$(OUT)/%.o)
 INCS=$(wildcard $(INC)/*.h)
-CFLAGS=-std=c99 -I$(INC)/ -masm=intel -mavx -g3
+CFLAGS=-std=c99 -I$(INC)/ -masm=intel  -g3
 
 
 TARGET=$(OUT)/main.out

@@ -10,10 +10,7 @@
  * \brief It is typedef for coords of vector from 4 dimension
  */
 typedef struct {
-    float x;
-    float y;
-    float z;
-    float w;
-} coords_t;
+    float buf[4];
+} vector_t;
 
 #endif //LAB_10_GENERAL_H

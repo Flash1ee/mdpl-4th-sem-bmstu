@@ -3,11 +3,12 @@
 
 int main() {
     puts("TEST C IMPLEMENTATION");
+    printf("%zu\n", sizeof(float));
 
-    coords_t vec_a[3] = {{1, 1, 1, 1},
+    vector_t vec_a[3] = {{1, 1, 1, 1},
                          {2, 2, 2, 2},
                          {3, 3, 3, 3}};
-    coords_t vec_b[3] = {{1, 1, 1,1},
+    vector_t vec_b[3] = {{1, 1, 1,1},
                          {2, 2, 2,2},
                          {3, 3, 3,3}};
 
@@ -21,9 +22,14 @@ int main() {
         print(&vec_b[i]);
 
         c_scalar_prod(&res, &vec_a[i], &vec_b[i]);
+        float res_sse=0.0;
+        avx_scalar_prod(&res_sse, &vec_a[i], &vec_b[i]);
 
         puts("result: ");
-        printf("%lf ", res);
+        printf("%lf \n", res);
+        printf("%lf \n", res_sse);
+
+
 
 
     }
