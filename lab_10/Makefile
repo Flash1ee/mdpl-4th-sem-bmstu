@@ -5,14 +5,14 @@ OUT=./out
 SOURCES=$(wildcard $(SRC)/*.c)
 OBJS=$(SOURCES:$(SRC)/%.c=$(OUT)/%.o)
 INCS=$(wildcard $(INC)/*.h)
-CFLAGS=-std=c99 -I$(INC)/ -masm=intel -mavx
+CFLAGS=-std=c99 -I$(INC)/ -masm=intel -mavx -g3
 
 
 TARGET=$(OUT)/main.out
 
-.PHONY: build clean run
+.PHONY: build clean all
 
-run: build
+all: build
 	$(TARGET)
 
 build: $(OBJS) $(INCS)
