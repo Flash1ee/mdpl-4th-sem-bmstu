@@ -33,25 +33,23 @@ void execution_test(size_t count) {
 //    float a = FLT_MAX;
 //    float b = FLT_MAX;
 //    float c = FLT_MAX;
-    float a = 10;
-    float b = 20;
-    float c = 30;
+    float a = 10.0;
+    float b = 20.0;
+    float c = 30.0;
 
     float res_c = 0;
     vector_t vec_a[3] = {a, b, c};
     vector_t vec_b[3] = {a, b, c};
-
-    puts("TEST C IMPLEMENTATION");
     clock_t start = clock();
+    puts("TEST C IMPLEMENTATION");
     for (size_t i = 0; i < count; i++) {
         c_scalar_prod(&res_c, vec_a, vec_b);
     }
     clock_t end_c = clock() - start;
     printf("C scalar multiply\n\t%.3g s\n", ((double) (end_c)) / CLOCKS_PER_SEC / (double) count);
     puts("TEST SSE ASSEMBLY");
-    start = clock();
     float res_asm = 0;
-
+    start = clock();
     for (size_t i = 0; i < count; i++) {
         sse_scalar_prod(&res_asm, vec_a, vec_b);
     }

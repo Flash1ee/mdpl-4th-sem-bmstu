@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "scalar_prod.h"
 
-#define COUNT 1000000000
+#define COUNT 10000
 
 int main() {
 
